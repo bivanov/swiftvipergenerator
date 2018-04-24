@@ -8,7 +8,7 @@ Requirements:
 * XCode that supports recent versions of Swift
 
 To install run 
-`pip3 install swivigen`
+`pip3 install SwiftViperGenerator`
 
 ## Usage
 
