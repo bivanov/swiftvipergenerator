@@ -25,8 +25,8 @@ def main():
     module_name = args.module
 
     template_dir = settings['templates_dir']
+    dir_path = os.path.dirname(os.path.realpath(__file__))
     if template_dir == '{Templates}':
-        dir_path = os.path.dirname(os.path.realpath(__file__))
         template_dir = dir_path + '/Templates'
     
     env = Environment(
