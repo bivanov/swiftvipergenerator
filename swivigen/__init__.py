@@ -3,21 +3,29 @@ import argparse
 from pbxproj import XcodeProject
 from jinja2 import Environment, Template, FileSystemLoader, select_autoescape
 import datetime
+import yaml
 
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--init',
                         help='add needed base Swift files into specified project',
                         action='store_true')
+    parser.add_argument('-c',
+                        '--config',
+                        help='path to YAML config file')
     parser.add_argument('project', help='XCode project that should be modified')
     parser.add_argument('module', help='name for new viper module')
     args = parser.parse_args()
-    
-    sys.path.append(os.getcwd()) 
-    
-    import viper_settings
 
-    settings = viper_settings.viper_settings()
+    if args.config:
+        config_path = args.config
+    else:
+        config_path = 'viper.yml'
+    
+    with open(config_path, 'r') as stream:
+        yaml_data = yaml.load(stream)
+
+    settings = yaml_data
     today = datetime.date.today()
     today_str = today.strftime('%d.%m.%y')
     year_str = today.strftime('%Y')
@@ -26,8 +34,10 @@ def main():
 
     template_dir = settings['templates_dir']
     dir_path = os.path.dirname(os.path.realpath(__file__))
-    if template_dir == '{Templates}':
+    if template_dir == '$Templates':
         template_dir = dir_path + '/Templates'
+
+    project_full_dir = os.path.dirname(os.path.realpath(args.project)) + '/' + settings['project_dir']
     
     env = Environment(
         loader=FileSystemLoader(template_dir),
@@ -48,7 +58,7 @@ def main():
     
     for part in parts:
         template = env.get_template(part + '.tpl.swift')
-        filename = '{2}/{0}s/{1}{0}.swift'.format(part, module_name, settings['project_dir'])
+        filename = '{2}/{0}s/{1}{0}.swift'.format(part, module_name, project_full_dir)
         rendered_template = template.render(module_name=module_name, file_type=part,
                                             creation_date=today_str, creation_year=year_str,
                                             project_author=settings['author'])

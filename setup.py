@@ -7,7 +7,7 @@ here = path.abspath(path.dirname(__file__))
 setup(
     name='SwiftViperGenerator',
 
-    version='1.0',
+    version='1.0.1',
 
     description='VIPER boilerplate code generator for Swift XCode projects',
     long_description='',
@@ -39,7 +39,7 @@ setup(
 
     include_package_data=True,
 
-    install_requires=['pbxproj', 'jinja2'],
+    install_requires=['pbxproj', 'jinja2', 'pyyaml'],
 
     entry_points={
         'console_scripts': [
