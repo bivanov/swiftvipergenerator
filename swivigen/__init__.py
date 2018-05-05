@@ -1,11 +1,14 @@
 import sys, os
 import argparse
 from pbxproj import XcodeProject
-from jinja2 import Environment, Template, FileSystemLoader, select_autoescape
+from jinja2 import exceptions, Environment, Template, FileSystemLoader, select_autoescape
 import datetime
 import yaml
+from colorama import init, Fore, Style
 
 def main():
+    init()
+    
     parser = argparse.ArgumentParser()
     parser.add_argument('--init',
                         help='add needed base Swift files into specified project',
@@ -61,20 +64,32 @@ def main():
                                     parent=common_group)
     
     for part in parts:
-        template = env.get_template(part + '.tpl.swift')
+        try:
+            template = env.get_template(part + '.tpl.swift')
+        except exceptions.TemplateNotFound:
+            print(Fore.RED + 'Cannot find template {0}'.format(part + '.tpl.swift'))
+            print(Style.RESET_ALL)
+            sys.exit(0)
+        
         filename = '{2}/{0}s/{1}{0}.swift'.format(part, module_name, project_full_dir)
         rendered_template = template.render(module_name=module_name, file_type=part,
                                             creation_date=today_str, creation_year=year_str,
                                             project_author=settings['author'])
-        output_file = open(filename, 'w')
-        output_file.write(rendered_template)
-        output_file.close()
 
         if args.makedirs:
             part_dir_path = project_full_dir + '/' + part + 's'
             if not os.path.exists(part_dir_path):
                 os.makedirs(part_dir_path)
         
+        try:
+            output_file = open(filename, 'w')
+            output_file.write(rendered_template)
+            output_file.close()
+        except FileNotFoundError:
+            print(Fore.RED + 'Cannot find file {0}; try to use swivigen with -m option'.format(filename))
+            print(Style.RESET_ALL)
+            sys.exit(0)
+            
         if part == 'ViewController':
             project_group = project.get_or_create_group(settings['uikit_controllers_group'])
         else:
