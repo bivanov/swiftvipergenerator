@@ -7,7 +7,7 @@ here = path.abspath(path.dirname(__file__))
 setup(
     name='SwiftViperGenerator',
 
-    version='1.0.1',
+    version='1.0.2',
 
     description='VIPER boilerplate code generator for Swift XCode projects',
     long_description='',
