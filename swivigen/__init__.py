@@ -13,6 +13,10 @@ def main():
     parser.add_argument('-c',
                         '--config',
                         help='path to YAML config file')
+    parser.add_argument('-m',
+                        '--makedirs',
+                        help='create needed folders inside project directory (Views, Interactors, Presenters, Routers, Controllers)',
+                        action='store_true')
     parser.add_argument('project', help='XCode project that should be modified')
     parser.add_argument('module', help='name for new viper module')
     args = parser.parse_args()
@@ -65,6 +69,12 @@ def main():
         output_file = open(filename, 'w')
         output_file.write(rendered_template)
         output_file.close()
+
+        if args.makedirs:
+            part_dir_path = project_full_dir + '/' + part + 's'
+            if not os.path.exists(part_dir_path):
+                os.makedirs(part_dir_path)
+        
         if part == 'ViewController':
             project_group = project.get_or_create_group(settings['uikit_controllers_group'])
         else:
