@@ -38,11 +38,11 @@ def main():
 
     template_dir = settings['templates_dir']
     dir_path = os.path.dirname(os.path.realpath(__file__))
-    if template_dir == '$Templates':
+    if template_dir == '$TEMPLATES':
         template_dir = dir_path + '/Templates'
 
     project_full_dir = os.path.dirname(os.path.realpath(args.project)) + '/' + settings['project_dir']
-    
+
     env = Environment(
         loader=FileSystemLoader(template_dir),
         autoescape=select_autoescape(['.tpl.swift'])
