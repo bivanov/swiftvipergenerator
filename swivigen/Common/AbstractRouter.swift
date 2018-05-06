@@ -8,5 +8,5 @@
 import UIKit
 
 protocol AbstractRouter {
-    static func setup() -> UIViewController
+    func setup() -> UIViewController
 }
