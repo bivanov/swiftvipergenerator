@@ -6,7 +6,7 @@ class {{ module_name }}Router: AbstractRouter {
     weak var view: UIViewController!
     
     func setup() -> UIViewController {
-        let viewController = (UIStoryboard(name: "Main",
+        let viewController = (UIStoryboard(name: "{{ storyboard_name }}",
                                            bundle: Bundle.main)
                                 .instantiateViewController(withIdentifier: "{{ module_name }}Controller") as? {{ module_name }}Controller)!
         

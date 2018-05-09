@@ -20,6 +20,9 @@ def main():
                         '--makedirs',
                         help='create needed folders inside project directory (Views, Interactors, Presenters, Routers, Controllers)',
                         action='store_true')
+    parser.add_argument('-s',
+                        '--storyboard',
+                        help='name of storyboard where created controller will be placed by user')
     parser.add_argument('project', help='XCode project that should be modified')
     parser.add_argument('module', help='name for new viper module')
     args = parser.parse_args()
@@ -28,6 +31,11 @@ def main():
         config_path = args.config
     else:
         config_path = 'viper.yml'
+
+    if args.storyboard:
+        storyboard_name = args.storyboard
+    else:
+        storyboard_name = 'Main'
     
     with open(config_path, 'r') as stream:
         yaml_data = yaml.load(stream)
@@ -74,6 +82,7 @@ def main():
         filename = '{2}/{0}s/{1}{0}.swift'.format(part, module_name, project_full_dir)
         rendered_template = template.render(module_name=module_name, file_type=part,
                                             creation_date=today_str, creation_year=year_str,
+                                            storyboard_name=storyboard_name,
                                             project_author=settings['author'])
 
         if args.makedirs:

@@ -19,6 +19,7 @@ To install run
 * `--init` will add base swivigen Swift files into project
 * `-c` or `--config` is path to YAML config file; if not specified, swivigen will try to use viper.yml file in current folder
 * `-m`, `--makedirs` will create needed folders inside project directory (Views, Interactors, Presenters, Routers, Controllers)
+* `-s`,`--storyboard` specifies name of storyboard where newly created view controller will be placed by user
 
 YAML config file has next structure:
 
