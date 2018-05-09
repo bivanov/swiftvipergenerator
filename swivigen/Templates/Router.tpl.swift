@@ -11,14 +11,13 @@ class {{ module_name }}Router: AbstractRouter {
                                 .instantiateViewController(withIdentifier: "{{ module_name }}Controller") as? {{ module_name }}Controller)!
         
         let presenter = {{ module_name }}Presenter()
-        let router = {{ module_name }}Router()
         let interactor = {{ module_name }}Interactor()
         
         viewController.presenter = presenter
         presenter.interactor = interactor
         presenter.view = viewController
-        presenter.router = router
-        router.view = viewController
+        presenter.router = self
+        self.view = viewController
         
         return viewController
     }
