@@ -1,5 +1,6 @@
 import sys, os
 import argparse
+from shutil import copyfile
 from pbxproj import XcodeProject
 from jinja2 import exceptions, Environment, Template, FileSystemLoader, select_autoescape
 import datetime
@@ -65,10 +66,15 @@ def main():
 
     if args.init:
         common_dir = dir_path + '/Common'
+        project_common_dir = project_full_dir + '/ViperCommon'
+        if not os.path.exists(project_common_dir):
+            os.makedirs(project_common_dir)
         common_group = project.get_or_create_group('ViperCommon')
         for dirname, dirnames, filenames in os.walk(common_dir):
             for filename in filenames:
-                project.add_file(os.path.join(dirname, filename), force=False,
+                project_filename = os.path.join(project_common_dir, filename)
+                copyfile(os.path.join(dirname, filename), project_filename)
+                project.add_file(project_filename, force=False,
                                     parent=common_group)
     
     for part in parts:
