@@ -7,6 +7,13 @@ import datetime
 import yaml
 from colorama import init, Fore, Style
 
+def add_to_project(project, filename, parent_group, targets=None):
+    if targets:
+        for target in targets:
+            project.add_file(filename, force=False, parent=parent_group, target_name=target)
+    else:
+        project.add_file(filename, force=False, parent=parent_group)
+
 def main():
     init()
     
@@ -23,7 +30,11 @@ def main():
                         action='store_true')
     parser.add_argument('-s',
                         '--storyboard',
-                        help='name of storyboard where created controller will be placed by user')
+                        help='specify name of storyboard where created controller will be placed by user')
+    parser.add_argument('-t',
+                        '--targets',
+                        help='specify list of targets where created files will be included; if not specified, all targets will include new files',
+                        nargs='+')
     parser.add_argument('project', help='XCode project that should be modified')
     parser.add_argument('module', help='name for new viper module')
     args = parser.parse_args()
@@ -46,6 +57,15 @@ def main():
     today_str = today.strftime('%d.%m.%y')
     year_str = today.strftime('%Y')
 
+    targets = []
+    
+    if 'targets' in settings:
+        targets = settings['targets']
+
+    # But this has higher priority
+    if args.targets:
+        targets = args.targets
+        
     module_name = args.module
 
     template_dir = settings['templates_dir']
@@ -74,8 +94,7 @@ def main():
             for filename in filenames:
                 project_filename = os.path.join(project_common_dir, filename)
                 copyfile(os.path.join(dirname, filename), project_filename)
-                project.add_file(project_filename, force=False,
-                                    parent=common_group)
+                add_to_project(project, filename, project_group, targets)
     
     for part in parts:
         try:
@@ -109,7 +128,7 @@ def main():
             project_group = project.get_or_create_group(settings['uikit_controllers_group'])
         else:
             project_group = project.get_or_create_group('{0}s'.format(part))
-        project.add_file(filename, force=False, parent=project_group)
+        add_to_project(project, filename, project_group, targets)
 
 
     project.save()
