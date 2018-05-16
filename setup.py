@@ -39,7 +39,7 @@ setup(
 
     include_package_data=True,
 
-    install_requires=['pbxproj', 'jinja2', 'pyyaml'],
+    install_requires=['pbxproj', 'jinja2', 'pyyaml', 'colorama'],
 
     entry_points={
         'console_scripts': [
