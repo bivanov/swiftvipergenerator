@@ -70,8 +70,8 @@ def init_viper(args):
             output_file.close()
             add_to_project(project, project_filename, common_group, targets)
         
-    for part in ['View', 'Interactor', 'Presenter', 'Router', 'ViewController']:
-        part_dir_path = project_full_dir + '/' + part + 's'
+    for part in ['Views', 'Interactors', 'Presenters', 'Routers', 'ViewControllers']:
+        part_dir_path = project_full_dir + '/' + part
         if not os.path.exists(part_dir_path):
             os.makedirs(part_dir_path)
 
@@ -123,18 +123,23 @@ def add_viper_files(args):
         autoescape=select_autoescape(['.tpl.swift'])
         )
 
-    parts = ['View', 'Interactor', 'Presenter', 'Router', 'ViewController']
+    parts = {'View': 'Views',
+                 'Interactor': 'Interactors',
+                 'Presenter': 'Presenters',
+                 'Router': 'Routers',
+                 'Controller': 'ViewControllers'
+                 }
             
-    for part in parts:
+    for key in parts.keys():
         try:
-            template = templates_env.get_template(part + '.tpl.swift')
+            template = templates_env.get_template(key + '.tpl.swift')
         except exceptions.TemplateNotFound:
-            print(Fore.RED + 'Cannot find template {0}'.format(part + '.tpl.swift'))
+            print(Fore.RED + 'Cannot find template {0}'.format(key + '.tpl.swift'))
             print(Style.RESET_ALL)
             sys.exit(0)
         
-        filename = '{2}/{0}s/{1}{0}.swift'.format(part, module_name, project_full_dir)
-        rendered_template = template.render(module_name=module_name, file_type=part,
+        filename = '{2}/{3}/{1}{0}.swift'.format(key, module_name, project_full_dir, parts[key])
+        rendered_template = template.render(module_name=module_name, file_type=key,
                                             creation_date=today_str, creation_year=year_str,
                                             storyboard_name=storyboard_name,
                                             project_author=settings['author'])
@@ -148,10 +153,10 @@ def add_viper_files(args):
             print(Style.RESET_ALL)
             sys.exit(0)
             
-        if part == 'ViewController':
+        if key == 'Controller':
             project_group = project.get_or_create_group(settings['uikit_controllers_group'])
         else:
-            project_group = project.get_or_create_group('{0}s'.format(part))
+            project_group = project.get_or_create_group('{0}s'.format(key))
         add_to_project(project, filename, project_group, targets)
 
     project.save()
