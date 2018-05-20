@@ -7,6 +7,6 @@
 
 import UIKit
 
-class ViperController<T>: UIViewController where T: AbstractPresenter {
+class ViperController<T>: {{ base_viewcontroller }} where T: AbstractPresenter {
     var presenter: T!
 }
