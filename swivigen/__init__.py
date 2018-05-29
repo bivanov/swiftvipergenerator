@@ -187,12 +187,17 @@ def __add_viper_files(args):
 
     add_viper_files(config_path, args.project, args.module, args.targets, args.storyboard)
 
+
+def __print_greeting(args):
+    print('swivigen - Generator of VIPER classes for Swift-based XCode projects')
+    print('Run `swivigen -h` to learn more')
+
         
 def main():
     init()
     
     parser = argparse.ArgumentParser()
-    subparsers = parser.add_subparsers(help='sub-command help')
+    subparsers = parser.add_subparsers(help='run `swivigen init --help` or `swivigen add --help` to know more about what you can do')
     parser_add = subparsers.add_parser('add', help='add VIPER files to specified project')
     parser_init = subparsers.add_parser('init', help='add base VIPER files and created required directories')
     
@@ -209,8 +214,6 @@ def main():
 
     parser_add.add_argument('project', help='XCode project that should be modified')
     parser_add.add_argument('module', help='name for new viper module')
-
-    
 
     parser_init.add_argument('-t',
                         '--targets',
@@ -230,6 +233,7 @@ def main():
                         help='create default yml settings file',
                         action="store_true")
 
+    parser.set_defaults(func=__print_greeting)
     parser_init.set_defaults(func=__init_viper)
     parser_add.set_defaults(func=__add_viper_files)
     
