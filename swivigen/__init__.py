@@ -209,7 +209,7 @@ def main():
                         help='specify name of storyboard where created controller will be placed by user')
     parser_add.add_argument('-t',
                         '--targets',
-                        help='specify list of targets where created files will be included; if not specified, all targets will include new files',
+                        help='specify list of targets where created files will be included; if not specified, all targets will include new files OR targets from config file will be used if any',
                         nargs='+')
 
     parser_add.add_argument('project', help='XCode project that should be modified')
@@ -217,7 +217,7 @@ def main():
 
     parser_init.add_argument('-t',
                         '--targets',
-                        help='specify list of targets where created files will be included; if not specified, all targets will include new files',
+                        help='specify list of targets where created files will be included; if not specified, all targets will include new files OR targets from config file will be used if any',
                         nargs='+')
 
     parser_init.add_argument('project', help='XCode project that should be modified')
@@ -230,7 +230,7 @@ def main():
     
     group.add_argument('-i',
                         '--initfile',
-                        help='create default yml settings file',
+                        help='create default YAML config file',
                         action="store_true")
 
     parser.set_defaults(func=__print_greeting)
